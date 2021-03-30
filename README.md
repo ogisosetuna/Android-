@@ -20,7 +20,7 @@ BroadcastReceive广播接收器，主要应用在程序之间传输信息的机�
     SingleTask：单任务模式。（微信主界面：分享功能）
     SingleInstance：堆内单例，手机系统内只有一个实例
 
-Activity四种状态：活动，暂停，停止，待用<br>
+Activity四种状态：活动（可见），暂停（可见无焦点），停止（不可见），待用<br>
 正常home后重启 onPause -->onStop |||||| onRestart -->onStart -->onResume
 横竖屏切换：onPause -->onSaveInstanceState -->onStop -->onDestroy -->onCreate-->onStart -->onRestoreInstanceState-->onResume -->onPause -->onStop -->onDestroy
 如果有设置configChanges	，只调用onConfigurationChanged方法。 <br>
@@ -75,6 +75,7 @@ Activity四种状态：活动，暂停，停止，待用<br>
     * View Animation
     * Drawable Animation
     * Property Animation 属性动画
+    或者分为逐帧动画，补间动画，属性动画
     属性动画系统可以让你定义动画的以下属性：
     * 时长
     * 时间插值
@@ -82,3 +83,48 @@ Activity四种状态：活动，暂停，停止，待用<br>
     * 动画集Animator sets
     * 帧频率
     说Java里面说list我们想到了ArrayList，说map我们想到了HashMap，说属性动画要想到ObjectAnimator
+## 14.接口和回调
+    先创建一个接口，假如接口中有一个抽象方法showToast（），只要是实现了ToastListener的类都必须要重写showToast（）方法。
+    新建一个类来设置回调，并写一个方法来回调接口的方法，可以用于其他类来实现接口的方法
+    在主界面去实现接口中未实现的方法，创建接口回调的那个类
+    https://www.jianshu.com/p/eba2c839db47 回调实例
+## 15.SurfaceView相关
+    View和SurfaceView的区别:
+    * View适用于主动更新的情况，而SurfaceView则适用于被动更新的情况，比如频繁刷新界面。
+    * View在主线程中对页面进行刷新，而SurfaceView则开启一个子线程来对页面进行刷新。
+    * View在绘图时没有实现双缓冲机制，SurfaceView在底层机制中就实现了双缓冲机制。
+    https://www.jianshu.com/p/b037249e6d31
+## 16.序列化的作用
+    序列化定义：将一个类对象转换成可存储、可传输状态的过程。序列化有两个过程：
+    * 序列化：将对象编码成字节流（serializing）
+    * 反序列化：从字节流编码中重新构建对象（deserializing)。对象序列化后，可以在进程内/进程间、网络间进行传输，也可以做本地持久化存储。
+    为什么要序列化: 系统底层并不认识对象，数据传输是以字节序列形式传递。
+        ！！以进程间通信为例，需要将对象转化为字节序列(字节序列中包括该对象的类型，成员信息等)，然后在目标进程里通过反序列化字节序列，将字节序列转换成对象。
+    序列化方式:
+    * Serializable(Java提供 后面简称为S)
+    * Parcelable(Android特有 下面简称为P)
+    P基于内存进行序列化和反序列化，效率高，代码复杂。
+## 17.安卓中的数据存储方式
+    * 文件存储
+    * SharedPreferences
+    * SQLite数据库存储
+    * ContentProvider
+    * 网络存储
+## 18.差值器和估值器
+    用来实现一些动画效果，例如做个抛物线运动。
+## 19.各版本API区别
+    * android6.0 代号M Marshmallow
+    API23，软件权限管理，安卓支付，指纹支持，App关联，
+    * android7.0 代号N Preview
+    API24，多窗口支持(不影响Activity生命周期)，增加了JIT编译器，引入了新的应用签名方案APK Signature Scheme v2（缩短应用安装时间和更多未授权APK文件更改保护）,严格了权限访问
+    * android8.0 代号O
+    API26，取消静态广播注册，限制后台进程调用手机资源，桌面图标自适应
+    * android9.0 代号P
+    API27，加强电池管理，系统界面添加了Home虚拟键，提供人工智能API，支持免打扰模式
+## 20.invalidate()和postInvalidate() 的区别及使用
+    invalidate()得在UI线程中被调动，在工作者线程中可以通过Handler来通知UI线程进行界面更新。
+    而postInvalidate()在工作者线程中被调用
+
+
+
+
