@@ -124,7 +124,39 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
 ## 20.invalidate()和postInvalidate() 的区别及使用
     invalidate()得在UI线程中被调动，在工作者线程中可以通过Handler来通知UI线程进行界面更新。
     而postInvalidate()在工作者线程中被调用
+## 21.wait 和 sleep的区别
+    sleep是让线程休眠，wait是等待。
+    * 使用上：从使用角度看，sleep是Thread线程类的方法，而wait是Object顶级类的方法。
+    sleep可以在任何地方使用，而wait只能在同步方法或者同步块中使用。
+    * CPU及资源锁释放: sleep,wait调用后都会暂停当前线程并让出cpu的执行时间。
+    但sleep不会释放当前持有的对象的锁资源，到时间后会继续执行，而wait会放弃所有锁并需要notify/notifyAll后重新获取到对象锁资源后才能继续执行
+## 22.Handler机制，looper相关
+    一套 Android 消息传递机制 / 异步通信机制
+    Handler封装了消息的发送：内部会跟Looper关联
+    Looper（消息封装的载体）：内部包含一个消息队列（MessageQueue），所有Handler发送的消息都会走向这个消息队列；
+    Looper.Looper方法是一个死循环，不断的从MessageQueue取消息，如果有消息就处理消息，没有消息就阻塞
+    MessageQueue（消息队列）：可以添加消息，并处理消息
 
+    子线程可以创建handler。一个线程可以有多个handler。只能有一个looper。
+    调用looper.prepare时创建looper。Looper中有一个sThreadLocal变量，ThreadLocal用于存储上下文信息。Threadlocal用final static修饰。
+    
+    内存泄露原因：当Handler消息队列 还有未处理的消息 / 正在处理消息时，存在引用关系： “未被处理 / 正处理的消息 -> Handler实例 -> 外部类”
+    若出现 Handler的生命周期 > 外部类的生命周期 时（即 Handler消息队列 还有未处理的消息 / 正在处理消息 而 外部类需销毁时），将使得外部类无法被垃圾回收器（GC）回收
+    主线程不会因为Looper.loop()方法造成阻塞，ActivityThread的main方法主要就是做消息循环。
+    ThreadLocal类提供了线程的局部变量。
+## 23.多线程的方式有哪些
+    继承Thread类（实现简单，局限性大）
+    实现Runnable接口（适合资源共享，灵活）
+    Handler（多个线程并发更新ui时保证线程安全）
+## 24.Handler、Thread和HandlerThread的差别
+    线程间通信的时候，比如Android中常见的更新UI，涉及到的是子线程和主线程之间的通信，实现方式就是Handler+Looper，但是要自己手动操作Looper，不推荐，所以谷歌封装了HandlerThread类.
+## 25.view事件分发
+    dispatchTouchEvent代表分发事件，onInterceptTouchEvent()代表拦截事件，onTouchEvent()代表消耗事件，由自己处理。
+    默认状态下事件是按照从Activity到ViewGroup再到View的顺序进行分发的，分发下去处不处理是另一回事。
+    分发完成后，不处理则向上一层回调，调用上一层的onTouchEvent进行处理事件，若onTouchEvent返回true，则表示在该层消耗了事件，若返回false，表示事件还没被处理，需要再向上回调一层，调用上一层的onTouchEvent方法。
+    https://juejin.cn/post/6844903894103883789#comment
+## 26.自定义View
+    继承view方式，重写方法onMeasure、 onLayout、onDraw、onTouchEvent
 
 
 
