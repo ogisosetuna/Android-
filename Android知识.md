@@ -157,6 +157,15 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     https://juejin.cn/post/6844903894103883789#comment
 ## 26.自定义View
     继承view方式，重写方法onMeasure、 onLayout、onDraw、onTouchEvent
+## 27.EventBus和ottobus区别 基于观察者模式
+    观察者模式：被观察者，产生事件；观察者，消费事件。
+    在Android里面EventBus时常用来在各模块之间解耦。例子：密码输入框，不需要知道谁会处理这个事件、怎么处理，这符合设计模式的原则：单一职责、最小知道原则。
+    两者基本用法类似。1.定义事件类 2.在观察者（处理者）类中定义@subscribe public方法，并注册此类的对象到EventBus中 3.在合适的地方post响应的事件 4.取消注册观察者。
+    差别：
+    *订阅方法不同。
+    *观察者方法执行的线程不同。Otto，默认你创建的Bus，只能在UI线程使用，也通过ThreadEnforcer接口开放了自定义的能力，post方法在哪个线程被调用，观察者方法就在哪个线程中执行。EventBus现在可以支持在每一个事件上配置线程策略、sticky与否、事件优先级。
+    *post方法执行不同。otto中post是同步操作。此方法返回的时候，所有感兴趣的观察者方法都已经被执行完毕。EventBus根据情况，可同步可异步。
+
 
 
 
