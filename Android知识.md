@@ -13,6 +13,9 @@
     借助全局变量 Application
     借助Service服务
     借助外部存储来实现通讯
+    * 进程间通讯的方式：文件、AIDL、Binder、Messenger、ContentProvider、Socket
+    * Linux 进程间通信方法： 匿名管道、有名管道、消息队列、共享内存、套接字、信号量、信号
+        
 ## 4.Activity各种情况下的生命周期，加载（启动）模式，什么时候会用到singleTask？
     加载模式分为四种
     Standard：在Activity的栈中无论该活动有没有加入栈，活动就会被创建。（邮件）
