@@ -13,6 +13,8 @@
     借助全局变量 Application
     借助Service服务
     借助外部存储来实现通讯
+    * Activity和Fragment之间的通信：bundle传递，在Fragment和Actiivty关联后，调用Activity中的public修饰的方法，广播，定义接口，文件
+    * Activity和Service之间的通信：通过bundle传递数据，startService(intent)和bindService（）方法启动服务，通过binder，通过messenger
     * 进程间通讯的方式：文件、AIDL、Binder、Messenger、ContentProvider、Socket
     * Linux 进程间通信方法： 匿名管道、有名管道、消息队列、共享内存、套接字、信号量、信号
         
@@ -150,7 +152,7 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
 ## 23.多线程的方式有哪些
     继承Thread类（实现简单，局限性大）
     实现Runnable接口（适合资源共享，灵活）
-    Handler（多个线程并发更新ui时保证线程安全）
+    实现Callable重写call方法
 ## 24.Handler、Thread和HandlerThread的差别
     线程间通信的时候，比如Android中常见的更新UI，涉及到的是子线程和主线程之间的通信，实现方式就是Handler+Looper，但是要自己手动操作Looper，不推荐，所以谷歌封装了HandlerThread类.
 ## 25.view事件分发
