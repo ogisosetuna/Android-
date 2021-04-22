@@ -1,13 +1,24 @@
 # Android-
-## 1.四大组件是什么
+## 四大组件是什么
     activity、service、contentprovider，broadcastReceive
-## 2.四大组件的生命周期和简单用法
+## 四大组件的生命周期和简单用法
     Activity：屏幕中能够与用户交互的一些界面
     生命周期：oncreate、onstart、onresume、onpause、onstop、ondestroy
     Service：没有界面、生命周期比较长的程序，一般用来监控类程序（后台播放音乐）。Onstart：server独立运行在后台。Onbind：绑定activity。
     Contentprovider：用于数据共享，让一个应用程序指定数据集提供给其他应用程序。（通讯录数据被多个应用使用，多进程通信）
     BroadcastReceive广播接收器，主要应用在程序之间传输信息的机制。普通，有序，异步广播。静态：无论程序是否启动。动态：只有程序运行时才接受广播。
-## 3.Activity之间的通信方式
+## 进程间通讯方式
+    * 使用 Intent 来进行进程间通信，比如在调用百度地图的时候，使用 Intent ，用startActivity 来启动百度地图的指定页面
+    * 使用共享文件的方式，比如 A 、 B 进程要进行通信，那么A 进程可以把要通信的内容通过序列化的方式写入到本地文件，然后 B 进程再通过读取本地文件的方式获取A 要传递的内容
+    * 使用 Messager 或者AIDL（Android Interface Define Language，事实上 Messager 也是通过 AIDL 实现的，只是 Android 为我们进行了进行了简单的封装），AIDL 的底层也是通过 Binder 来完成进程间通信的。
+    * 使用 ContentProvider 进行进程间通信，作为四大组件，底层使用的也是 Binder 来完成进程间通信的
+    * 使用 Socket，Socket 可以实现计算机网络中的两个进程间通信，当然也可以用于进程间通信服务端监听指定的端口，客户端链接指定的端口，成功建立链接以后，拿到 socket 对象客户端就可以向服务端发送消息，或者接受服务端传来的消息。
+
+    AIDL，Android接口定义语言。 使数据类实现 Parcelable 接口，将要传输的数据转化为能够在内存之间流通的形式。这个转化的过程就叫做序列化与反序列化。定向tag：in, out, inout
+    inder机制中，由一系统组件组成，分别是Client、Server、Service Manager和Binder驱动程序. Binder在内核空间开辟一块 数据接收内存缓存区和 内核缓存区。
+
+
+## Activity之间的通信方式
     在Intent跳转时携带数据
     借助类的静态变量
     借助全局变量 Application
@@ -18,10 +29,10 @@
     * 进程间通讯的方式：文件、AIDL、Binder、Messenger、ContentProvider、Socket
     * Linux 进程间通信方法： 匿名管道、有名管道、消息队列、共享内存、套接字、信号量、信号
         
-## 4.Activity各种情况下的生命周期，加载（启动）模式，什么时候会用到singleTask？
+## Activity各种情况下的生命周期，加载（启动）模式，什么时候会用到singleTask？
     加载模式分为四种
     Standard：在Activity的栈中无论该活动有没有加入栈，活动就会被创建。（邮件）
-    SingleTop：只要被创建的活动不位于栈的顶部，该活动就会被创建入栈。（登陆界面，推送通知）
+    SingleTop：只要被创建的活动不位于栈的顶部，该活动就会被创建入栈。（QQ接受到消息后弹出Activity，推送通知）
     SingleTask：单任务模式。（微信主界面：分享功能）
     SingleInstance：堆内单例，手机系统内只有一个实例
 
@@ -99,7 +110,7 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     * View在主线程中对页面进行刷新，而SurfaceView则开启一个子线程来对页面进行刷新。
     * View在绘图时没有实现双缓冲机制，SurfaceView在底层机制中就实现了双缓冲机制。
     https://www.jianshu.com/p/b037249e6d31
-## 16.序列化的作用
+## 序列化的作用
     序列化定义：将一个类对象转换成可存储、可传输状态的过程。序列化有两个过程：
     * 序列化：将对象编码成字节流（serializing）
     * 反序列化：从字节流编码中重新构建对象（deserializing)。对象序列化后，可以在进程内/进程间、网络间进行传输，也可以做本地持久化存储。
@@ -109,6 +120,7 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     * Serializable(Java提供 后面简称为S)
     * Parcelable(Android特有 下面简称为P)
     P基于内存进行序列化和反序列化，效率高，代码复杂。
+    
 ## 17.安卓中的数据存储方式
     * 文件存储
     * SharedPreferences
@@ -229,6 +241,14 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
 ## HTTP和HTTPS区别
     HTTPS协议是由SSL+HTTP协议构建的可进行加密传输、身份认证的网络协议，要比http协议安全。
     HTTP（超文本传输协议）是一个基于请求与响应模式的、无状态的、应用层的协议，常基于TCP的连接方式
+    
+    HTTP 的 URL 以 http:// 开头，而 HTTPS 的 URL 以 https:// 开头
+    HTTP 是不安全的，而 HTTPS 是安全的
+    HTTP 标准端口是 80 ，而 HTTPS 的标准端口是 443
+    在 OSI 网络模型中，HTTP 工作于应用层，而 HTTPS 工作在传输层
+    HTTP 无需加密，而 HTTPS 对传输的数据进行加密
+    HTTP 无需证书，而 HTTPS 需要认证证书
+    
 ## 常用的HTTP方法有哪些？
     GET： 用于请求访问已经被URI（统一资源标识符）识别的资源，可以通过URL传参给服务器。
     POST：用于传输信息给服务器，主要功能与GET方法类似，但一般推荐使用POST方式。
@@ -264,5 +284,43 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     事务
     4个原则：原子性，隔离性，一致性，持久性
     4个隔离级别：读取非提交，读取已提交，可重复读，可串行性
+    
+## android的系统结构
+    应用程序
+    应用程序框架 ： 视图，内容提供器，资源管理器，活动管理器
+    系统运行库和安卓运行环境 ： SQLite，2D图形引擎SGL，3D；  应用程序都在它自己的进程中运行，都拥有一个独立的Dalvik虚拟机实例。
+    Linux内核 ： Binder (IPC)，电源管理。
+    
+## Activity启动流程
+    Launcher进程请求ActivityManagerService
+    AMS向Zygote进程发送创建应用进程的请求
+    Zygote进程接收到请求后创建应用进程
+    应用进程启动ActivityThread
+    ActivityThread绑定到AMS
+    AMS向主线程（ActivityThread）发送启动Activity的请求
+    ActivityThread的Handler接收到信息，处理启动Activity的请求
+
+## 进程保活
+    提供进程优先级，降低进程被杀死的概率
+    在进程被杀死后，进行拉活
+    *进程的重要性
+        前台进程 (Foreground process)
+        可见进程 (Visible process)
+        服务进程 (Service process)
+        后台进程 (Background process)
+        空进程 (Empty process)
+    根据 OOM_ADJ 阈值级别触发相应力度的内存回收的机制。
+    * 利用 Activity 提升权限 比如屏幕锁屏时启动1个像素的 Activity
+    * 利用 Notification 提升权限 调用 setForeground 将后台 Service 设置为前台 Service， 但必须在系统的通知栏发送一条通知
+## 三级缓存
+
+## MVP in Android
+    View 对应于Activity，负责View的绘制以及与用户交互
+    Model 依然是业务逻辑和实体模型
+    Presenter 负责完成View于Model间的交互
+
+
+
+
 
 
