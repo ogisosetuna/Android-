@@ -325,7 +325,15 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     Model 依然是业务逻辑和实体模型
     Presenter 负责完成View于Model间的交互
 
-
+## socket保持长连接
+    启动服务之前先判断一下连接服务是否正在运行，如果正在运行，就不再启动服务了
+    socket放到service中，socket使用心跳包，断线重连
+    使用eventbus发布/订阅事件。
+    EventBus的使用步骤分为定义事件、订阅事件、发送事件、处理事件、取消订阅
+    * 定义一个事件类，里面添加需要发送的数据内容
+    * 在需要接收事件的地方订阅事件，可以选择注册事件订阅方法。
+    * 最后，将处理完成的数据发送出去。
+            EventBus.getDefault().post(new MessageEvent());
 
 
 
