@@ -21,11 +21,17 @@
     Binder机制中，由一系统组件组成，分别是Client、Server、Service Manager和Binder驱动程序. Binder在内核空间开辟一块 数据接收内存缓存区和 内核缓存区。
 
 ## 安卓中的数据存储方式
-    * 文件存储
-    * SharedPreferences
-    * SQLite数据库存储
-    * ContentProvider
-    * 网络存储
+    SharedPreferences：以Map形式存放简单的配置参数；
+    ContentProvider：将应用的私有数据提供给其他应用使用；
+    文件存储：以IO流形式存放，可分为手机内部和手机外部（sd卡等）存储，可存放较大数据；
+    SQLite：轻量级、跨平台数据库，将所有数据都是存放在手机上的单一文件内，占用内存小；
+    网络存储 ：数据存储在服务器上，通过连接网络获取数据；
+
+    （SharedPreference 相关修改：
+    apply 方法进行提交会先写入内存，然后异步写入磁盘，commit方法是直接写入磁盘。
+    如果频繁操作的话 apply 的性能会优于 commit，apply会将最后修改内容写入磁盘。
+    但是如果希望立刻获取存储操作的结果，并据此做相应的其他操作，应当使用 commit。）
+ 
 
 ## Activity之间的通信方式
     在Intent跳转时携带数据
