@@ -7,6 +7,16 @@
     Service：没有界面、生命周期比较长的程序，一般用来监控类程序（后台播放音乐）。Onstart：server独立运行在后台。Onbind：绑定activity。
     Contentprovider：用于数据共享，让一个应用程序指定数据集提供给其他应用程序。（通讯录数据被多个应用使用，多进程通信）
     BroadcastReceive广播接收器，主要应用在程序之间传输信息的机制。普通，有序，异步广播。静态：无论程序是否启动。动态：只有程序运行时才接受广播。
+    
+## Activity启动流程
+    Launcher进程请求ActivityManagerService
+    AMS向Zygote进程发送创建应用进程的请求
+    Zygote进程接收到请求后创建应用进程
+    应用进程启动ActivityThread
+    ActivityThread绑定到AMS
+    AMS向主线程（ActivityThread）发送启动Activity的请求
+    ActivityThread的Handler接收到信息，处理启动Activity的请求
+    
 ## 进程间通讯方式
     * 进程间通讯的方式：文件、AIDL、Binder、Messenger、ContentProvider、Socket
     * Linux 进程间通信方法： 匿名管道、有名管道、消息队列、共享内存、套接字、信号量、信号
@@ -322,15 +332,6 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     应用程序框架 ： 视图，内容提供器，资源管理器，活动管理器
     系统运行库和安卓运行环境 ： SQLite，2D图形引擎SGL，3D；  应用程序都在它自己的进程中运行，都拥有一个独立的Dalvik虚拟机实例。
     Linux内核 ： Binder (IPC)，电源管理。
-    
-## Activity启动流程
-    Launcher进程请求ActivityManagerService
-    AMS向Zygote进程发送创建应用进程的请求
-    Zygote进程接收到请求后创建应用进程
-    应用进程启动ActivityThread
-    ActivityThread绑定到AMS
-    AMS向主线程（ActivityThread）发送启动Activity的请求
-    ActivityThread的Handler接收到信息，处理启动Activity的请求
 
 ## 进程保活
     提供进程优先级，降低进程被杀死的概率
