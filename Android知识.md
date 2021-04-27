@@ -94,10 +94,16 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     主要应用在程序之间传输信息的机制。
     按注册方式分类，静态：无论程序是否启动都接受。动态：只有程序运行时才接受广播。
     *分类
-    无序广播、有序广播、粘性广播
-
+    无序广播、有序广播、粘性广播（已失效）
     *本地广播和全局广播的区别
      本地广播只能够在应用程序的内部进行传递 ，并且广播接收器也只能接收来自应用程序发出的广播，解决了全局广播的安全性问题。
+     
+    自定义广播接收者BroadcastReceiver，并复写onReceive方法；
+    通过Binder机制向AMS（Activity Manager Service）进行注册；
+    广播发送者通过Binder机制向AMS发送广播；
+    AMS查找符合相应条件（IntentFilter / Permission等）的BroadcastReceiver，将广播发送到BroadcastReceiver（一般情况下是Activity）相应的消息循环队列中；
+    消息循环执行拿到此广播，回调BroadcastReceiver中的onReceive方法。
+
 ## AlertDialog、PopupWindow 与 Activity 之间区别
     AlertDialog 是非阻塞式对话框；而PopupWindow 是阻塞式对话框
     两者最根本的区别在于有没有新建一个window。PopupWindow 没有新建，而是通过 WMS 将 View 加到 DecorView；Dialog 是新建了一个 window (PhoneWindow)
@@ -216,6 +222,20 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     * onMeasure()方法： 单一View， 一般重写此方法， 针对wrap_content情况， 规定View默认的大小值， 避免于match_parent情况一致。 ViewGroup， 若不重写， 就会执行和单子View中相同逻辑， 不会测量子View。 一般会重写onMeasure()方法， 循环测量子View。
     * onLayout()方法:单一View， 不需要实现该方法。 ViewGroup必须实现， 该方法是个抽象方法， 实现该方法， 来对子View进行布局。View测量、 布局及绘制原理
     * onDraw()方法： 无论单一View， 或者ViewGroup都需要实现该方法， 因其是个空方法
+
+## 可改进之处：
+    
+    考虑多种情况主机断开网络时，靠IP大小来决定谁是下一个主机。主机会持续在局域网内发送自己的IP地址。
+    数据的存储形式，[操作类型，数据长度，操作时间，数据内容]
+    可以实现一个重播功能。
+    
+    大图加载：不压缩，按照原图尺寸加载，那么屏幕肯定是不够大的，并且考虑到内存的情况，不可能一次性整图加载到内存中，所以肯定是局部加载，那么就需要用到一个类： BitmapRegionDecoder
+ 
+
+## 刷新 view 的几种方式，他们有什么区别？
+    invalidate、postinvalidate和requestvalid
+    invalidate前者是在UI线程自身中使用，而后者postinvalidate在非UI线程中使用。
+    requestLayout()方法，当view宽高、位置改变而内容不变时，可回调这个函数。而前两者是在内容发生改变时回调的。
 
 ## socket（套接字）
     Socket是对TCP/IP协议的封装，是一个调用接口API。在TCP/IP协议中主要有Socket类型的流套接字StreamSocket和数据报套接字DatagramSocket。
