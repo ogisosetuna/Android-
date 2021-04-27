@@ -57,8 +57,8 @@
     加载模式分为四种
     Standard：在Activity的栈中无论该活动有没有加入栈，活动就会被创建。（邮件）
     SingleTop：只要被创建的活动不位于栈的顶部，该活动就会被创建入栈。（QQ接受到消息后弹出Activity，推送通知）
-    SingleTask：单任务模式。（微信主界面：分享功能）
-    SingleInstance：堆内单例，手机系统内只有一个实例
+    SingleTask：单任务模式。（微信主界面：分享功能） 只会启动主界面一次，其余情况都会走onNewIntent
+    SingleInstance：堆内单例，手机系统内只有一个实例。适合需要与程序分离开的页面。例如闹铃提醒
 
 Activity四种状态：活动（可见），暂停（可见无焦点），停止（不可见），待用<br>
 正常home后重启 onPause -->onStop |||||| onRestart -->onStart -->onResume
@@ -223,7 +223,15 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
         5)请求失败时自动重试主机的其他ip，自动重定向
         6)丰富的API，可扩展性好
 
-
+## java（前端编译和后端编译）
+    前端：把Java源码文件（.java）编译成Class文件(.class)的过程；
+    后端：在运行时把Class文件字节码编译成本地机器码的过程
+## android 编译流程：
+    编译前检查--> 编译（资源文件和源码）-->打包签名
+    检查，资源文件生成aapt 和 java文件 和aidl文件编译成java
+    编译工程源码，java代码生成相应的class文件
+    转换所有的class文件生成classes.dex文件。
+    打包生成APK文件。
 
 # 多人白板
 ## 自定义view
@@ -304,6 +312,10 @@ Activity四种状态：活动（可见），暂停（可见无焦点），停止
     get把请求的数据放在url上即HTTP协议头,而post会把数据放在HTTP的包体内。
     对于GET方式的请求，浏览器会把http header和data一并发送出去，服务器响应200（返回数据）；
     而对于POST，浏览器先发送header，服务器响应100 continue，浏览器再发送data，服务器响应200 ok（返回数据）。
+##  cookie、session和token
+    cookie只是实现session的其中一种方案
+    token（令牌）在客户端一般存放于localStorage，cookie，或sessionStorage中。在服务器一般存于数据库中
+
 ## HTTP优化
     利用负载均衡优化和加速HTTP应用
     利用HTTP Cache来优化网站
